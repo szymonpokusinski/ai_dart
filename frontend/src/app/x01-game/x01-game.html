@@ -1,0 +1,82 @@
+<div class="h-screen bg-black text-white flex flex-col lg:flex-row overflow-x-hidden lg:overflow-hidden font-sans select-none">
+
+  <div class="flex-1 flex flex-col min-w-0">
+    <header class="p-4 lg:p-6 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/[0.05] shrink-0 z-20">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.4)]">
+          <span class="text-[10px] font-black italic">501</span>
+        </div>
+        <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Live Arena</p>
+      </div>
+      <button (click)="exitGame()" class="lg:hidden w-10 h-10 flex items-center justify-center text-white/20">
+        <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+      </button>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-4 lg:p-8 touch-pan-y overscroll-contain no-scrollbar pb-[280px] lg:pb-8">
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-3 max-w-[1200px] mx-auto">
+        @for (player of players; track player.name; let isFirst = $first) {
+          <div class="relative flex flex-col rounded-[1.5rem] border transition-all duration-300 overflow-hidden min-h-[110px]"
+               [ngClass]="isFirst ? 'border-blue-500/40 bg-blue-600/10 shadow-xl' : 'border-white/[0.03] bg-[#161618] opacity-60'">
+            <div class="flex items-center p-4 gap-4 flex-1">
+              <div class="flex flex-col items-center gap-1 shrink-0">
+                <div class="w-10 h-10 rounded-xl border flex items-center justify-center bg-white/[0.03]" [ngClass]="isFirst ? 'border-blue-500/50' : 'border-white/5'">
+                  <span class="text-xs font-black text-white/20">{{ player.name.charAt(0) }}</span>
+                </div>
+                <span class="text-[7px] font-black text-white/30 uppercase">{{ player.name }}</span>
+              </div>
+              <div class="flex-1 flex justify-center">
+                <span [class.text-blue-400]="isFirst" class="text-4xl lg:text-5xl font-black tabular-nums tracking-tighter">{{ player.score }}</span>
+              </div>
+              <div class="flex flex-col items-end gap-2 shrink-0">
+                <div class="flex gap-1">
+                  @for (dartVal of player.currentDarts; track $index) {
+                    <div class="w-7 h-7 rounded-lg flex items-center justify-center text-[9px] font-black bg-white/[0.05] border border-white/[0.05]">{{ dartVal }}</div>
+                  }
+                </div>
+                <div class="px-2 py-0.5 bg-blue-500/10 rounded-md text-blue-500 text-[9px] font-black uppercase tracking-tighter">{{ player.avg }} avg</div>
+              </div>
+            </div>
+            <div class="w-full h-1 bg-white/[0.02] shrink-0"><div class="h-full bg-blue-600" [style.width.%]="50"></div></div>
+          </div>
+        }
+      </div>
+    </main>
+  </div>
+
+  <aside class="w-full lg:w-[380px] fixed bottom-0 left-0 right-0 lg:relative lg:bg-black shrink-0 z-50 flex flex-col justify-end pointer-events-none">
+    <div class="pointer-events-auto bg-white/[0.03] backdrop-blur-[30px] rounded-t-[2.5rem] border-t border-x border-white/[0.1] shadow-[0_-20px_80px_rgba(0,0,0,0.9)] p-4 lg:p-8 lg:h-full lg:flex lg:flex-col lg:justify-center lg:rounded-none lg:border-l lg:border-t-0">
+
+      <div class="lg:hidden w-8 h-1 bg-white/20 rounded-full mx-auto mb-5"></div>
+
+      <div class="h-[210px] lg:h-[420px]">
+        <div class="grid grid-cols-7 lg:grid-cols-3 gap-1.5 lg:gap-3 h-full">
+
+          @for (n of scoreButtons; track n) {
+            <button class="bg-[#242424] rounded-[18px] text-sm font-bold text-white/90 border border-white/5 active:bg-white/10 transition-all">
+              {{ n }}
+            </button>
+          }
+
+          <button class="bg-[#242424] rounded-[18px] font-bold border border-white/5 active:bg-white/10">
+            0
+          </button>
+
+          <button class="col-span-2 lg:col-span-1 bg-[#d97706] rounded-[18px] text-black font-bold text-[10px] uppercase tracking-tight active:opacity-80">
+            DOUBLE
+          </button>
+
+          <button class="col-span-2 lg:col-span-1 bg-[#059669] rounded-[18px] text-black font-bold text-[10px] uppercase tracking-tight active:opacity-80">
+            TRIPLE
+          </button>
+
+          <button class="col-span-2 lg:col-span-3 bg-[#450a0a]/80 border border-red-900/30 text-red-500 rounded-[18px] flex items-center justify-center active:bg-red-900">
+            <ion-icon name="backspace-outline" class="text-xl"></ion-icon>
+          </button>
+
+        </div>
+      </div>
+      <div class="h-4 lg:hidden"></div>
+    </div>
+  </aside>
+</div>

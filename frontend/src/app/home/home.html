@@ -1,0 +1,75 @@
+<div class="h-screen w-full bg-black text-[#f5f5f7] font-sans antialiased overflow-y-auto overflow-x-hidden selection:bg-blue-500/30">
+
+  <div class="fixed top-0 right-0 w-full h-[40vh] bg-gradient-to-b from-blue-600/20 to-transparent pointer-events-none z-0"></div>
+
+  <header class="relative w-full px-8 pt-16 pb-6 z-10 transition-all">
+  </header>
+
+  <main class="relative px-4 pb-32 max-w-md mx-auto space-y-6 z-10">
+
+    <section class="w-full">
+      <div class="overflow-hidden rounded-[2.5rem] bg-[#111111] border border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.6)]">
+        <div class="p-2 min-h-[380px]">
+          <app-init-game></app-init-game>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-2 gap-4">
+      <button class="flex flex-col items-center justify-center p-6 bg-[#161618] rounded-[2.2rem] border border-white/[0.05] active:scale-95 active:bg-white/[0.05] transition-all">
+        <div class="w-14 h-14 rounded-full bg-blue-600 shadow-[0_0_25px_rgba(37,99,235,0.3)] flex items-center justify-center mb-3">
+          <ion-icon name="people" class="text-2xl text-white"></ion-icon>
+        </div>
+        <span class="text-sm font-bold tracking-tight">Gracze</span>
+        <span class="text-[9px] text-white/30 mt-1 uppercase font-black">Registry</span>
+      </button>
+
+      <button class="flex flex-col items-center justify-center p-6 bg-[#161618] rounded-[2.2rem] border border-white/[0.05] active:scale-95 active:bg-white/[0.05] transition-all">
+        <div class="w-14 h-14 rounded-full bg-[#252528] flex items-center justify-center mb-3">
+          <ion-icon name="time" class="text-2xl text-blue-400"></ion-icon>
+        </div>
+        <span class="text-sm font-bold tracking-tight">Historia</span>
+        <span class="text-[9px] text-white/30 mt-1 uppercase font-black">Archives</span>
+      </button>
+    </div>
+
+    <div class="bg-[#161618] rounded-[2.2rem] overflow-hidden border border-white/[0.05]">
+      <button class="w-full flex items-center justify-between p-5 active:bg-white/5 border-b border-white/[0.03]">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500">
+            <ion-icon name="settings" class="text-xl"></ion-icon>
+          </div>
+          <span class="font-bold text-sm">Ustawienia aplikacji</span>
+        </div>
+        <ion-icon name="chevron-forward" class="text-white/10"></ion-icon>
+      </button>
+
+      <button class="w-full flex items-center justify-between p-5 active:bg-white/5">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400">
+            <ion-icon name="help-circle" class="text-xl"></ion-icon>
+          </div>
+          <span class="font-bold text-sm">Pomoc i zasady</span>
+        </div>
+        <ion-icon name="chevron-forward" class="text-white/10"></ion-icon>
+      </button>
+    </div>
+
+  </main>
+
+  <nav class="fixed bottom-0 left-0 right-0 h-20 bg-black/80 backdrop-blur-xl border-t border-white/[0.08] px-10 flex justify-between items-center z-[100]">
+    <button class="flex flex-col items-center gap-1 text-blue-500">
+      <ion-icon name="grid" class="text-2xl"></ion-icon>
+      <span class="text-[9px] font-black uppercase">Główna</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-white/20">
+      <ion-icon name="trophy-outline" class="text-2xl"></ion-icon>
+      <span class="text-[9px] font-black uppercase">Ranking</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-white/20">
+      <ion-icon name="person-outline" class="text-2xl"></ion-icon>
+      <span class="text-[9px] font-black uppercase">Profil</span>
+    </button>
+  </nav>
+
+</div>

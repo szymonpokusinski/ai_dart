@@ -1,0 +1,50 @@
+<div class="relative w-full max-w-[350px] bg-[#09090b] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl isolation-isolate p-6">
+
+  <div class="absolute inset-x-5 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
+
+  <div class="relative mb-6 text-center">
+    <span class="text-[11px] font-black uppercase tracking-[0.25em] text-white drop-shadow-md">
+      Nowy Zawodnik
+    </span>
+  </div>
+
+  <div class="space-y-4">
+    <div class="relative group">
+      <div class="absolute inset-0 bg-white/[0.03] backdrop-blur-md rounded-[1.5rem] border border-white/5 transition-all group-within:border-blue-500 group-within:bg-blue-600/5"></div>
+
+      <div class="relative p-1">
+        <mat-form-field class="w-full custom-no-subscript">
+          <input matInput
+                 [(ngModel)]="player.name"
+                 placeholder="WPISZ NAZWĘ..."
+                 class="text-white! font-bold text-center placeholder:text-white/20 tracking-widest uppercase text-xs h-12"
+                 autocomplete="off">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-row items-center gap-3 mt-8">
+
+    <button type="button" (click)="onCancel()"
+            class="relative flex-1 group active:scale-[0.96] transition-transform duration-200">
+      <div class="absolute inset-0 bg-white/[0.03] rounded-[1.2rem] border border-white/10 transition-all group-hover:bg-white/[0.08]"></div>
+      <div class="relative h-12 flex items-center justify-center">
+        <span class="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-white/70 transition-colors">Wróć</span>
+      </div>
+    </button>
+
+    <button type="button"
+            (click)="onSave()"
+            [disabled]="!player.name.trim()"
+            class="relative flex-1 group active:scale-[0.96] transition-transform duration-200 disabled:opacity-30 disabled:grayscale">
+
+      <div class="absolute inset-0 bg-blue-600 rounded-[1.2rem] ring-1 ring-white/20 shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all group-hover:bg-blue-500"></div>
+
+      <div class="relative h-12 flex items-center justify-center">
+        <span class="text-[9px] font-black uppercase tracking-[0.2em] text-white">Zapisz</span>
+      </div>
+    </button>
+  </div>
+  <div class="absolute bottom-0 left-0 right-0 h-12 bg-linear-to-t from-white/[0.02] to-transparent pointer-events-none"></div>
+</div>
