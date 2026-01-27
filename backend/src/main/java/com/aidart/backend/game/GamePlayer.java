@@ -2,11 +2,17 @@ package com.aidart.backend.game;
 
 import com.aidart.backend.player.Player;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "game_players")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GamePlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
