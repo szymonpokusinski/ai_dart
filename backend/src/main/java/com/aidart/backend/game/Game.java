@@ -5,20 +5,29 @@ import com.aidart.backend.game.enums.GameStatus;
 import com.aidart.backend.game.enums.GameType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "games")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "uuid", unique = true, updatable = false)
+    @JdbcTypeCode(SqlTypes.UUID)
+    private UUID uuid;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
