@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 public record GameDto(
         Long id,
+        String uuid,
         GameType type,
         GameStatus status,
         LocalDate startTime,
@@ -22,6 +23,7 @@ public record GameDto(
         public static GameDto fromEntity(Game game) {
                 return GameDto.builder()
                         .id(game.getId())
+                        .uuid(game.getUuid().toString())
                         .type(game.getType())
                         .status(game.getStatus())
                         .startTime(game.getStartTime())

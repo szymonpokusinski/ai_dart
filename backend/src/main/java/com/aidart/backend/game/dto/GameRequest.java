@@ -13,7 +13,7 @@ public record GameRequest(
         @Size(min = 1, max = 6, message = "Game must have between 1 and 6 players")
         List<PlayerOrderRequest> players,
 
-        @NotNull(message = "Game type is required (e.g., POINTS_301, POINTS_501)")
+        @NotNull(message = "Game type is required (e.g., TYPE_301, TYPE_501)")
         GameType type,
 
         @NotNull(message = "Finish rule is required (e.g., DOUBLE_OUT)")
