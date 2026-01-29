@@ -8,7 +8,7 @@ import {PageResponse} from '../models/page.response';
 @Injectable({
   providedIn: 'root'
 })
-export abstract class AppServiceClientService<T> {
+export abstract class AppServiceClientService<T, R = T> {
   protected readonly http = inject(HttpClient);
   protected readonly baseUrl = environment.apiUrl;
 
@@ -39,8 +39,10 @@ export abstract class AppServiceClientService<T> {
     );
   }
 
-  create(payload: Partial<T>): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}/${this.endpoint}`, payload);
+  create(payload: R): Observable<T> {
+    return this.http.post<T>(`${this.baseUrl}/${this.endpoint}`, payload).pipe(
+      map(data => this.mapFn ? this.mapFn(data) : data)
+    );
   }
 
   update(id: number, payload: T) {
