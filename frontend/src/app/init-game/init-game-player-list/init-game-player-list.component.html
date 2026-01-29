@@ -2,11 +2,15 @@
 
   <div class="absolute top-0 left-0 right-0 h-14 bg-linear-to-b from-[#09090b] via-[#09090b]/80 to-transparent z-30 pointer-events-none"></div>
 
-  <div class="h-full overflow-y-auto custom-scrollbar px-4 pt-12 pb-24 space-y-2 scroll-smooth relative z-10">
+  <div cdkDropList
+       (cdkDropListDropped)="drop($event)"
+       class="h-full overflow-y-auto custom-scrollbar px-4 pt-12 pb-24 space-y-2 relative z-10">
+
     @for (player of players; track player.id) {
-      <div class="relative group cursor-pointer transition-all duration-300 transform-gpu"
-           [class.scale-[1.02]]="isSelected(player.id)"
-           (click)="toggleSelection(player.id)">
+      <div cdkDrag
+           class="relative group transition-all duration-300 transform-gpu">
+
+        <div *cdkDragPlaceholder class="bg-white/[0.02] border border-dashed border-white/10 rounded-[1.5rem] h-[74px] w-full"></div>
 
         <div class="absolute inset-0 rounded-[1.5rem] border pointer-events-none transition-colors duration-300 z-20"
              [class.border-blue-500]="isSelected(player.id)"
@@ -14,6 +18,7 @@
       </div>
 
       <div class="flex items-center gap-4 p-4 rounded-[1.5rem] overflow-hidden relative transition-all duration-300"
+           (click)="toggleSelection(player.id)"
            [class.bg-blue-600/10]="isSelected(player.id)"
         [class.shadow-[0_0_20px_rgba(37,99,235,0.15)]]="isSelected(player.id)"
         [class.backdrop-blur-xl]="isSelected(player.id)"
@@ -36,10 +41,13 @@
         </p>
       </div>
 
-      <ion-icon name="reorder-two-outline" class="text-2xl z-10 transition-colors shrink-0"
-                [class.text-blue-400]="isSelected(player.id)"
-                [class.text-white/10]="!isSelected(player.id)">
-      </ion-icon>
+      <div cdkDragHandle (click)="$event.stopPropagation()" class="p-2 cursor-grab active:cursor-grabbing z-30">
+        <ion-icon name="reorder-two-outline"
+                  class="text-2xl transition-colors shrink-0"
+                  [class.text-blue-400]="isSelected(player.id)"
+                  [class.text-white/10]="!isSelected(player.id)">
+        </ion-icon>
+      </div>
       </div>
       </div>
     } @empty {
@@ -53,19 +61,13 @@
   <div class="absolute bottom-4 left-6 right-6 z-40">
     <button type="button" (click)="openAddPlayerDialog()"
             class="relative w-full group active:scale-[0.96] transition-transform duration-200">
-      <div class="absolute inset-0 bg-white/[0.02] backdrop-blur-3xl saturate-200 rounded-[1.5rem] ring-1 ring-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] transition-all"></div>
-      <div class="absolute inset-x-5 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
-      <div class="relative h-14 flex items-center justify-center gap-3">
-        <div class="flex items-center justify-center w-7 h-7 rounded-full bg-white/10 border border-white/20 text-white shadow-inner transition-all group-hover:bg-blue-600 group-hover:border-transparent">
-          <ion-icon name="add" class="text-lg transition-transform group-hover:rotate-90"></ion-icon>
-        </div>
-        <span class="text-[11px] font-black uppercase tracking-[0.25em] text-white drop-shadow-md">
-          Dodaj Gracza
-        </span>
+      <div class="absolute inset-0 bg-white/[0.02] backdrop-blur-3xl rounded-[1.5rem] ring-1 ring-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] transition-all"></div>
+      <div class="relative h-14 flex items-center justify-center gap-3 text-white">
+        <ion-icon name="add" class="text-lg"></ion-icon>
+        <span class="text-[11px] font-black uppercase tracking-[0.25em]">Dodaj Gracza</span>
       </div>
     </button>
   </div>
 
   <div class="absolute bottom-0 left-0 right-0 h-28 bg-linear-to-t from-[#09090b] via-[#09090b]/80 to-transparent pointer-events-none z-30"></div>
-
 </div>

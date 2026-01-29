@@ -1,33 +1,47 @@
-import { CommonModule } from '@angular/common';
-import {Component} from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
+import {GameType} from '../../core/models/db/game/GameType';
+import {GameFinishRule} from '../../core/models/db/game/GameFinishRule';
 
 @Component({
   selector: 'app-game-settings',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './game-settings.html',
-  styleUrl: './game-settings.scss'
+  templateUrl: 'game-settings.html',
 })
-export class GameSettingsComponent {
-  // Stan rozwijania list
-  isPointsOpen = false;
-  isCheckoutOpen = false;
+export class GameSettingsSelectorComponent {
+  @Output() settingsChanged = new EventEmitter<{type: GameType, rule: GameFinishRule}>();
 
-  // Wybrane wartości (defaulty)
-  selectedPoints = '501';
-  selectedCheckout = 'Double Out';
+  isModalOpen = false;
+  modalMode: 'type' | 'rule' = 'type';
 
-  // Opcje
-  pointsOptions = ['301', '501', '701', '901'];
-  checkoutOptions = ['Straight Out', 'Double Out', 'Master Out'];
+  selectedType: GameType = GameType.TYPE_501;
+  selectedRule: GameFinishRule = GameFinishRule.DOUBLE_OUT;
 
-  selectPoints(val: string) {
-    this.selectedPoints = val;
-    this.isPointsOpen = false;
+  typeOptions = Object.values(GameType);
+  ruleOptions = Object.values(GameFinishRule);
+
+  get currentOptions() {
+    return this.modalMode === 'type' ? this.typeOptions : this.ruleOptions;
   }
 
-  selectCheckout(val: string) {
-    this.selectedCheckout = val;
-    this.isCheckoutOpen = false;
+  openModal(mode: 'type' | 'rule') {
+    this.modalMode = mode;
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  isSelected(option: any): boolean {
+    return this.modalMode === 'type' ? this.selectedType === option : this.selectedRule === option;
+  }
+
+  selectOption(option: any) {
+    if (this.modalMode === 'type') {
+      this.selectedType = option;
+    } else {
+      this.selectedRule = option;
+    }
+    this.settingsChanged.emit({ type: this.selectedType, rule: this.selectedRule });
+    setTimeout(() => this.closeModal(), 150);
   }
 }
