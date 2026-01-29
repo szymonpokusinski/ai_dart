@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Service
@@ -34,16 +36,13 @@ public class GameService {
 
     @Transactional
     public Game create(CreateGameCommand command) {
-
-        List<Long> playersIds = new java.util.ArrayList<>(command.players().stream()
-                .map(PlayerOrder::playerId)
-                .toList());
+        List<Long> playersIds = command.playersIds();
 
         List<Long> existingIds = playerRepository.findAllExistingIds(playersIds);
-
         if (existingIds.size() != playersIds.size()) {
-            playersIds.removeAll(existingIds);
-            throw new ResourceNotFoundException("Players not found: " + playersIds);
+            List<Long> missingIds = new ArrayList<>(playersIds);
+            missingIds.removeAll(existingIds);
+            throw new ResourceNotFoundException("Players not found: " + missingIds);
         }
 
         Game game = Game.builder()
@@ -52,31 +51,34 @@ public class GameService {
                 .finishRule(command.finishRule())
                 .startTime(LocalDate.now())
                 .status(GameStatus.IN_PROGRESS)
+                .activePlayer(playerRepository.getReferenceById(playersIds.getFirst()))
+                .currentRound(1)
                 .build();
 
         Game savedGame = gameRepository.save(game);
-
         int initialScore = getInitialScore(command.type());
 
-        List<GamePlayer> gamePlayers = command.players().stream()
-                .map(order -> {
-                    Player playerProxy = playerRepository.getReferenceById(order.playerId());
+        List<GamePlayer> gamePlayers = IntStream.range(0, playersIds.size())
+                .mapToObj(index -> {
+                    Long playerId = playersIds.get(index);
+                    Player playerProxy = playerRepository.getReferenceById(playerId);
 
                     return GamePlayer.builder()
                             .game(savedGame)
                             .player(playerProxy)
-                            .startPosition(order.positon())
+                            .startPosition(index + 1)
                             .scoreLeft(initialScore)
                             .build();
                 })
                 .toList();
 
+        gamePlayerRepository.saveAll(gamePlayers);
+
         GameState gameState = gameMapper.toGameState(savedGame, gamePlayers);
+        gameState.setActivePlayerId(playersIds.getFirst());
 
         String redisKey = "game:" + gameState.getUuid();
         redisTemplate.opsForValue().set(redisKey, gameState, Duration.ofHours(12));
-
-        gamePlayerRepository.saveAll(gamePlayers);
 
         return savedGame;
     }

@@ -11,7 +11,7 @@ import java.util.List;
 public record GameRequest(
         @NotEmpty(message = "Player list cannot be empty")
         @Size(min = 1, max = 6, message = "Game must have between 1 and 6 players")
-        List<PlayerOrderRequest> players,
+        List<Long> playersIds,
 
         @NotNull(message = "Game type is required (e.g., TYPE_301, TYPE_501)")
         GameType type,

@@ -6,7 +6,7 @@ import com.aidart.backend.game.enums.GameType;
 import java.util.List;
 
 public record CreateGameCommand (
-        List<PlayerOrder> players,
+        List<Long> playersIds,
         GameType type,
         GameFinishRule finishRule
 ){

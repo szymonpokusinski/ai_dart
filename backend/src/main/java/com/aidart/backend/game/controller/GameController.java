@@ -21,9 +21,7 @@ public class GameController {
     @PostMapping
     public ResponseEntity<GameDto> create(@Valid @RequestBody GameRequest request) {
         CreateGameCommand command = new CreateGameCommand(
-                request.players().stream()
-                        .map(p -> new PlayerOrder(p.playerId(), p.position()))
-                        .toList(),
+                request.playersIds(),
                 request.type(),
                 request.finishRule()
         );
