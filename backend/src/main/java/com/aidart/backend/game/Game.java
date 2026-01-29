@@ -3,6 +3,7 @@ package com.aidart.backend.game;
 import com.aidart.backend.game.enums.GameFinishRule;
 import com.aidart.backend.game.enums.GameStatus;
 import com.aidart.backend.game.enums.GameType;
+import com.aidart.backend.player.Player;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,4 +47,11 @@ public class Game {
     @Enumerated(EnumType.STRING)
     @Column(name = "finish_rule")
     private GameFinishRule finishRule;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "active_player_id")
+    private Player activePlayer;
+
+    @Column(name = "current_round")
+    private int currentRound;
 }
