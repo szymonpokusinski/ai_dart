@@ -67,7 +67,8 @@
               },
               {
                 "input": "src/theme/variables.css"
-              }
+              },
+              "src/styles.scss"
             ]
           },
           "configurations": {
