@@ -1,11 +1,15 @@
 package com.aidart.backend.game;
 
 import com.aidart.backend.player.Player;
+import com.aidart.backend.visit.Visit;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "game_players")
@@ -26,6 +30,9 @@ public class GamePlayer {
     @JoinColumn(name = "player_id")
     private Player player;
 
+    @OneToMany(mappedBy = "gamePlayer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Visit> visits = new ArrayList<>();
+
     @Column(name = "start_position")
     private Integer startPosition;
 
@@ -34,4 +41,12 @@ public class GamePlayer {
 
     @Column(name = "score_left")
     private Integer scoreLeft;
+
+    public void setFinalVisits(List<Visit> newVisits) {
+        this.visits.clear();
+        if (newVisits != null) {
+            newVisits.forEach(v -> v.setGamePlayer(this));
+            this.visits.addAll(newVisits);
+        }
+    }
 }

@@ -13,6 +13,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -29,6 +31,9 @@ public class Game {
     @Column(name = "uuid", unique = true, updatable = false)
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID uuid;
+
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GamePlayer> gamePlayers = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
@@ -50,7 +55,7 @@ public class Game {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "active_player_id")
-    private Player activePlayer;
+    private GamePlayer activePlayer;
 
     @Column(name = "current_round")
     private int currentRound;
