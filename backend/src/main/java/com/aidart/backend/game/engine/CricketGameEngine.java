@@ -7,7 +7,17 @@ import com.aidart.backend.shot.ShotDto;
 public class CricketGameEngine implements GameEngine{
 
     @Override
-    public GameState handleShot(ShotDto shotDto) {
+    public GameState handleShot(GameState gameState, ShotDto shotDto) {
+        return null;
+    }
+
+    @Override
+    public GameState deleteShot(GameState gameState) {
+        return null;
+    }
+
+    @Override
+    public GameState finishGame(GameState gameState) {
         return null;
     }
 

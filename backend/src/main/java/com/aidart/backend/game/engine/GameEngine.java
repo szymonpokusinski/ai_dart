@@ -5,6 +5,8 @@ import com.aidart.backend.game.enums.GameType;
 import com.aidart.backend.shot.ShotDto;
 
 public interface GameEngine{
-    GameState handleShot(ShotDto shotDto);
+    GameState handleShot(GameState gameState,ShotDto shotDto);
+    GameState deleteShot(GameState gameState);
+    GameState finishGame(GameState gameState);
     boolean supportsGameType(GameType gameType);
 }
