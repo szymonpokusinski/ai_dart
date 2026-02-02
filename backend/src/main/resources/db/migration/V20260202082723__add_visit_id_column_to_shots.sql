@@ -1,0 +1,7 @@
+ALTER TABLE shots ADD COLUMN visit_id INTEGER;
+
+ALTER TABLE shots
+ADD CONSTRAINT fk_shots_visit
+FOREIGN KEY (visit_id)
+REFERENCES visits(id)
+ON DELETE CASCADE;
