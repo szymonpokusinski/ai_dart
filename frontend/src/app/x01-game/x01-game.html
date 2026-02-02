@@ -1,82 +1,193 @@
-<div class="h-screen bg-black text-white flex flex-col lg:flex-row overflow-x-hidden lg:overflow-hidden font-sans select-none">
+<div class="h-screen bg-black text-white flex flex-col lg:flex-row overflow-hidden font-sans select-none">
 
-  <div class="flex-1 flex flex-col min-w-0">
-    <header class="p-4 lg:p-6 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/[0.05] shrink-0 z-20">
+  <div class="flex-1 flex flex-col min-h-0 relative z-0">
+
+    <header
+      class="p-4 lg:p-6 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/5 shrink-0 z-20">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.4)]">
+        <div
+          class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.4)]">
           <span class="text-[10px] font-black italic">501</span>
         </div>
         <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Live Arena</p>
       </div>
-      <button (click)="exitGame()" class="lg:hidden w-10 h-10 flex items-center justify-center text-white/20">
+      <button (click)="exitGame()"
+              class="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-white/20 hover:bg-white/5 active:bg-white/10 transition-all">
         <ion-icon name="close-outline" class="text-2xl"></ion-icon>
       </button>
     </header>
 
-    <main class="flex-1 overflow-y-auto p-4 lg:p-8 touch-pan-y overscroll-contain no-scrollbar pb-[280px] lg:pb-8">
+    <main #scrollContainer
+          class="flex-1 overflow-y-auto p-4 lg:p-8 touch-pan-y overscroll-contain scroll-smooth pb-[50vh]">
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-3 max-w-[1200px] mx-auto">
-        @for (player of players; track player.name; let isFirst = $first) {
-          <div class="relative flex flex-col rounded-[1.5rem] border transition-all duration-300 overflow-hidden min-h-[110px]"
-               [ngClass]="isFirst ? 'border-blue-500/40 bg-blue-600/10 shadow-xl' : 'border-white/[0.03] bg-[#161618] opacity-60'">
+
+        @for (player of currentGameState?.gamePlayers; track player.id) {
+          <div
+            [id]="'player-card-' + player.id"
+            class="relative flex flex-col rounded-[1.5rem] border transition-all duration-300 overflow-hidden min-h-[130px] shrink-0"
+            [ngClass]="{
+              'border-blue-500/40 bg-blue-600/10 shadow-[0_0_30px_rgba(37,99,235,0.15)] scale-[1.02] z-10 opacity-100':
+                  player.id === currentGameState?.activePlayerId && currentGameState?.gameStatus !== 'FINISHED',
+
+              'border-amber-500/30 bg-amber-500/5 opacity-100': player.finalPosition === 1,
+              'border-slate-400/30 bg-slate-400/5 opacity-80': player.finalPosition === 2,
+              'border-orange-700/30 bg-orange-700/5 opacity-80': player.finalPosition === 3,
+
+              'border-white/5 bg-[#161618] opacity-50 grayscale-[0.5]':
+                  (!player.finalPosition || player.finalPosition > 3) &&
+                  (currentGameState?.gameStatus === 'FINISHED' || player.id !== currentGameState?.activePlayerId)
+            }">
+
             <div class="flex items-center p-4 gap-4 flex-1">
+
               <div class="flex flex-col items-center gap-1 shrink-0">
-                <div class="w-10 h-10 rounded-xl border flex items-center justify-center bg-white/[0.03]" [ngClass]="isFirst ? 'border-blue-500/50' : 'border-white/5'">
-                  <span class="text-xs font-black text-white/20">{{ player.name.charAt(0) }}</span>
-                </div>
-                <span class="text-[7px] font-black text-white/30 uppercase">{{ player.name }}</span>
-              </div>
-              <div class="flex-1 flex justify-center">
-                <span [class.text-blue-400]="isFirst" class="text-4xl lg:text-5xl font-black tabular-nums tracking-tighter">{{ player.score }}</span>
-              </div>
-              <div class="flex flex-col items-end gap-2 shrink-0">
-                <div class="flex gap-1">
-                  @for (dartVal of player.currentDarts; track $index) {
-                    <div class="w-7 h-7 rounded-lg flex items-center justify-center text-[9px] font-black bg-white/[0.05] border border-white/[0.05]">{{ dartVal }}</div>
+                <div
+                  class="w-12 h-12 rounded-2xl border flex items-center justify-center bg-white/5 relative overflow-hidden transition-colors"
+                  [ngClass]="{
+                       'border-blue-500/50 text-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.2)]': player.id === currentGameState?.activePlayerId && currentGameState?.gameStatus !== 'FINISHED',
+                       'border-amber-500/20 text-amber-500': player.finalPosition === 1,
+                       'border-slate-400/20 text-slate-400': player.finalPosition === 2,
+                       'border-orange-700/20 text-orange-600': player.finalPosition === 3,
+                       'border-white/5 text-white/20': !player.finalPosition && (currentGameState?.gameStatus === 'FINISHED' || player.id !== currentGameState?.activePlayerId)
+                     }">
+
+                  @if (player.finalPosition && player.finalPosition <= 3) {
+                    <ion-icon name="trophy-outline" class="text-xl"></ion-icon>
+                  } @else {
+                    <span class="text-sm font-black">{{ player.playerName.charAt(0) }}</span>
                   }
                 </div>
-                <div class="px-2 py-0.5 bg-blue-500/10 rounded-md text-blue-500 text-[9px] font-black uppercase tracking-tighter">{{ player.avg }} avg</div>
+
+                @if (player.finalPosition) {
+                  <span class="text-[10px] font-black uppercase tracking-wider"
+                        [ngClass]="{
+                       'text-amber-500': player.finalPosition === 1,
+                       'text-slate-400': player.finalPosition === 2,
+                       'text-orange-600': player.finalPosition === 3,
+                       'text-white/30': player.finalPosition > 3
+                    }">
+                    #{{ player.finalPosition }}
+                  </span>
+                }
+              </div>
+
+              <div class="flex-1 flex flex-col items-center justify-center min-w-0">
+                <span
+                  class="text-sm lg:text-base font-black uppercase tracking-[0.15em] mb-1 truncate w-full text-center"
+                  [ngClass]="{
+                        'text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.4)]': player.id === currentGameState?.activePlayerId && currentGameState?.gameStatus !== 'FINISHED',
+                        'text-white/80': player.id !== currentGameState?.activePlayerId || currentGameState?.gameStatus === 'FINISHED'
+                      }">
+                  {{ player.playerName }}
+                </span>
+
+                <span
+                  class="text-4xl lg:text-5xl font-black tabular-nums tracking-tighter transition-colors duration-300 leading-none"
+                  [ngClass]="{
+                    'text-white': player.id === currentGameState?.activePlayerId && currentGameState?.gameStatus !== 'FINISHED',
+                    'text-amber-500/90': player.finalPosition === 1,
+                    'text-slate-400/90': player.finalPosition === 2,
+                    'text-orange-600/90': player.finalPosition === 3,
+                    'text-white/60': !player.finalPosition && (currentGameState?.gameStatus === 'FINISHED' || player.id !== currentGameState?.activePlayerId)
+                  }">
+                  {{ player.scoreLeft }}
+                </span>
+
+                @if (player.scoreLeft === 0) {
+                  <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mt-1">Checkout</span>
+                }
+              </div>
+
+              <div class="flex flex-col items-end gap-2 shrink-0">
+                <div class="flex gap-1">
+                  @for (shotIdx of [0, 1, 2]; track shotIdx) {
+                    @let shot = player.visits[player.visits.length - 1]?.shots?.[shotIdx];
+                    <div
+                      class="w-8 h-8 rounded-xl flex items-center justify-center text-[9px] font-black border transition-colors"
+                      [ngClass]="{
+              'bg-white/10 border-white/20 text-white': shot && shot.multiplier === 'SINGLE',
+              'bg-amber-600/20 border-amber-500/40 text-amber-500': shot && shot.multiplier === 'DOUBLE',
+              'bg-emerald-600/20 border-emerald-500/40 text-emerald-500': shot && shot.multiplier === 'TRIPLE',
+              'bg-white/5 border-white/5 text-white/10': !shot
+           }">
+                      @if (shot) {
+                        <span class="flex items-center">
+            @if (shot.multiplier === 'DOUBLE') {
+              D
+            } @else if (shot.multiplier === 'TRIPLE') {
+              T
+            }
+                          {{ shot.baseScore }}
+          </span>
+                      } @else {
+                        -
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="px-2 py-0.5 bg-white/5 border border-white/10 rounded-full flex items-center gap-1">
+                  <span class="text-[7px] text-white/30 font-bold uppercase tracking-wider">LAST</span>
+                  <span class="text-[10px] text-white/40 font-black tabular-nums">
+      {{ player.visits[player.visits.length - 1]?.totalScore ?? 0 }}
+    </span>
+                </div>
               </div>
             </div>
-            <div class="w-full h-1 bg-white/[0.02] shrink-0"><div class="h-full bg-blue-600" [style.width.%]="50"></div></div>
+
+            <div class="w-full h-1 bg-white/2 shrink-0">
+              <div class="h-full bg-blue-600 transition-all duration-500"
+                   [style.width.%]="(player.id === currentGameState?.activePlayerId && currentGameState?.gameStatus !== 'FINISHED') ? 100 : 0"></div>
+            </div>
           </div>
         }
       </div>
     </main>
   </div>
 
-  <aside class="w-full lg:w-[380px] fixed bottom-0 left-0 right-0 lg:relative lg:bg-black shrink-0 z-50 flex flex-col justify-end pointer-events-none">
-    <div class="pointer-events-auto bg-white/[0.03] backdrop-blur-[30px] rounded-t-[2.5rem] border-t border-x border-white/[0.1] shadow-[0_-20px_80px_rgba(0,0,0,0.9)] p-4 lg:p-8 lg:h-full lg:flex lg:flex-col lg:justify-center lg:rounded-none lg:border-l lg:border-t-0">
-
-      <div class="lg:hidden w-8 h-1 bg-white/20 rounded-full mx-auto mb-5"></div>
-
-      <div class="h-[210px] lg:h-[420px]">
-        <div class="grid grid-cols-7 lg:grid-cols-3 gap-1.5 lg:gap-3 h-full">
-
+  <aside
+    class="w-full lg:w-[450px] fixed bottom-0 left-0 right-0 lg:relative lg:bg-black shrink-0 z-50 flex flex-col justify-end pointer-events-auto">
+    <div
+      class="bg-[#050505]/90 backdrop-blur-2xl rounded-t-[2rem] border-t border-x border-white/10 p-2 pb-safe lg:p-6 lg:h-full lg:flex lg:flex-col lg:justify-center lg:rounded-none lg:border-l lg:border-t-0">
+      <div class="lg:hidden w-10 h-1 bg-white/10 rounded-full mx-auto mb-3 mt-1"></div>
+      <div class="h-auto">
+        <div class="grid grid-cols-7 lg:grid-cols-4 gap-1.5 lg:gap-3">
           @for (n of scoreButtons; track n) {
-            <button class="bg-[#242424] rounded-[18px] text-sm font-bold text-white/90 border border-white/5 active:bg-white/10 transition-all">
+            <button (click)="handleThrowInput(n)"
+                    class="relative overflow-hidden rounded-xl h-10 lg:h-14 flex items-center justify-center border transition-all duration-200 active:scale-95 font-bold text-sm lg:text-lg shadow-sm"
+                    [ngClass]="{
+              'bg-white/5 border-white/5 text-white/90 hover:bg-white/10': request.multiplier === ScoreMultiplier.SINGLE,
+              'bg-amber-600/20 border-amber-600/40 text-amber-100 hover:bg-amber-600/30': request.multiplier === ScoreMultiplier.DOUBLE,
+              'bg-emerald-600/20 border-emerald-600/40 text-emerald-100 hover:bg-emerald-600/30': request.multiplier === ScoreMultiplier.TRIPLE
+            }" style="border-radius: 8px !important;">
               {{ n }}
             </button>
           }
-
-          <button class="bg-[#242424] rounded-[18px] font-bold border border-white/5 active:bg-white/10">
+          <button (click)="handleThrowInput(0)"
+                  class="rounded-xl h-10 lg:h-14 flex items-center justify-center border transition-all duration-200 active:scale-95 font-bold text-white/90 shadow-sm"
+                  [ngClass]="{'bg-white/5 border-white/5 hover:bg-white/10': true}"
+                  style="border-radius: 8px !important;">
             0
           </button>
-
-          <button class="col-span-2 lg:col-span-1 bg-[#d97706] rounded-[18px] text-black font-bold text-[10px] uppercase tracking-tight active:opacity-80">
-            DOUBLE
+          <button (click)="setMultiplier(ScoreMultiplier.DOUBLE)"
+                  class="col-span-2 lg:col-span-1 rounded-xl h-10 lg:h-14 flex items-center justify-center border active:scale-95 transition-all duration-200"
+                  [ngClass]="request.multiplier === ScoreMultiplier.DOUBLE ? 'bg-amber-500 border-amber-500 text-black font-black' : 'bg-amber-500/5 border-amber-500/20 text-amber-500'"
+                  style="border-radius: 8px !important;">
+            <span class="text-[10px] lg:text-xs font-bold uppercase tracking-wider">Double</span>
           </button>
-
-          <button class="col-span-2 lg:col-span-1 bg-[#059669] rounded-[18px] text-black font-bold text-[10px] uppercase tracking-tight active:opacity-80">
-            TRIPLE
+          <button (click)="setMultiplier(ScoreMultiplier.TRIPLE)"
+                  class="col-span-2 lg:col-span-1 rounded-xl h-10 lg:h-14 flex items-center justify-center border active:scale-95 transition-all duration-200"
+                  [ngClass]="request.multiplier === ScoreMultiplier.TRIPLE ? 'bg-emerald-500 border-emerald-500 text-black font-black' : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-500'"
+                  style="border-radius: 8px !important;">
+            <span class="text-[10px] lg:text-xs font-bold uppercase tracking-wider">Triple</span>
           </button>
-
-          <button class="col-span-2 lg:col-span-3 bg-[#450a0a]/80 border border-red-900/30 text-red-500 rounded-[18px] flex items-center justify-center active:bg-red-900">
-            <ion-icon name="backspace-outline" class="text-xl"></ion-icon>
+          <button (click)="handleDeleteShot()"
+                  class="col-span-2 lg:col-span-4 bg-red-500/5 hover:bg-red-500/10 active:bg-red-500/20 border border-red-500/10 rounded-xl h-10 lg:h-14 flex items-center justify-center active:scale-95 transition-colors"
+                  style="border-radius: 8px !important;">
+            <ion-icon name="backspace-outline" class="text-xl text-red-500/80"></ion-icon>
           </button>
-
         </div>
       </div>
-      <div class="h-4 lg:hidden"></div>
     </div>
   </aside>
 </div>

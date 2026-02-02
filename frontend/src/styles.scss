@@ -5,3 +5,28 @@
   --color-dark-bg: #1b1b1f;
   --color-dart-blue: #2563eb;
 }
+
+/* FIX DLA DIALOGU - DODAJ TO PONIŻEJ */
+@layer base {
+  .custom-glass-dialog {
+    /* To zapewnia, że kontener nie psuje ostrości */
+    .mat-mdc-dialog-container .mdc-dialog__surface {
+      background-color: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      filter: none !important; // Usuwamy ewentualne filtry
+      -webkit-font-smoothing: antialiased; // Wygładzanie czcionek
+    }
+  }
+
+  /* Klasa dla szerszego dialogu */
+  .wider-dialog {
+    max-width: 600px !important;
+  }
+
+  /* Backdrop - rozmywamy to co POD spodem, a nie sam dialog */
+  .cdk-overlay-backdrop-showing {
+    backdrop-filter: blur(15px) brightness(0.5);
+    background: rgba(0, 0, 0, 0.4) !important;
+  }
+}

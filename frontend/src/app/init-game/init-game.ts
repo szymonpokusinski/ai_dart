@@ -41,7 +41,7 @@ export class InitGameComponent {
     }
 
     this.gameService.create(this.request).subscribe({
-      next: (game) => this.router.navigate(['/game', game.uuid]),
+      next: (game) => this.router.navigate(['x01-game', game.uuid]),
       error: (err) => console.error('Błąd startu:', err)
     });
   }

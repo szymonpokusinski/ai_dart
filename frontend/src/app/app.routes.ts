@@ -13,7 +13,7 @@ export const routes: Routes = [
     component: Home
   },
   {
-    path: 'x01-game',
+    path: 'x01-game/:uuid',
     component: X01GameComponent
   },
 ];
